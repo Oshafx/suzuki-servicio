@@ -1,0 +1,199 @@
+@font-face {
+  font-family: 'SuzukiFont';
+  src: url('../assets/S.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}/* Colores de Suzuki */
+:root {
+    --suzuki-blue-dark: #002D72;   /* Azul oscuro/principal */
+    --suzuki-blue-light: #006ACB;  /* Azul más vibrante para acentos */
+    --suzuki-orange: #FF6F00;      /* Naranja para detalles */
+    --background-light: #F3F4F6;   /* Fondo de la página */
+    --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* ------------------------------------------- */
+/* ESTILOS DEL CONTENEDOR PRINCIPAL (PAGE) */
+/* ------------------------------------------- */
+
+.registro-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--background-light);
+    padding: 1rem;
+    position: relative; /* Para las formas abstractas */
+    overflow: hidden;
+}
+
+/* ------------------------------------------- */
+/* FORMAS ABSTRACTAS (Efecto de la imagen) */
+/* ------------------------------------------- */
+
+.registro-container::before,
+.registro-container::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    z-index: 0;
+    animation: blob 7s infinite;
+}
+
+.registro-container::before {
+    top: 25%;
+    left: 25%;
+    width: 128px; /* w-32 */
+    height: 128px; /* h-32 */
+    background-color: var(--suzuki-orange);
+}
+
+.registro-container::after {
+    bottom: 25%;
+    right: 25%;
+    width: 160px; /* w-40 */
+    height: 160px; /* h-40 */
+    background-color: var(--suzuki-blue-light);
+    animation-delay: 2s; /* Desfase en la animación */
+}
+
+@keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0px, 0px) scale(1); }
+}
+
+
+/* ------------------------------------------- */
+/* ESTILOS DE LA TARJETA DEL FORMULARIO */
+/* ------------------------------------------- */
+
+.registro-card {
+    background-color: white;
+    align-items: center;
+    padding: 2rem; /* p-8 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: var(--card-shadow);
+    max-width: 200px; /* max-w-sm w-full */
+    width: 100%;
+    z-index: 10; /* Asegura que esté por encima de las formas */
+}
+
+.registro-header {
+    text-align: center;
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: bold;
+    color: #1F2937; /* gray-800 */
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+/* Estilo para el logo/símbolo (opcional) */
+.registro-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--suzuki-blue-dark);
+  font-family: 'SuzukiFont', s ; /* 👈 Aquí aplicas tu fuente */
+}
+
+/* ------------------------------------------- */
+/* ESTILOS DEL FORMULARIO E INPUTS */
+/* ------------------------------------------- */
+
+.registro-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* gap-4 */
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 0.75rem; /* left-3 */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9CA3AF; /* gray-400 */
+    width: 20px;
+    height: 20px;
+}
+
+.registro-input {
+    padding: 0.75rem 0.75rem 0.75rem 2.5rem; /* p-3 y padding a la izq por el ícono */
+    border-radius: 0.375rem; /* rounded-md */
+    border: 1px solid #D1D5DB; /* border-gray-300 */
+    width: 100%;
+    font-size: 1rem;
+    color: #1F2937;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.registro-input:focus {
+    outline: none;
+    border-color: var(--suzuki-blue-light);
+    box-shadow: 0 0 0 2px var(--suzuki-blue-light);
+}
+
+/* ------------------------------------------- */
+/* ESTILOS DEL BOTÓN */
+/* ------------------------------------------- */
+
+.registro-button {
+    background-color: var(--suzuki-blue-dark);
+    color: white;
+    padding: 0.75rem; /* py-3 */
+    border-radius: 0.375rem; /* rounded-md */
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.registro-button:hover {
+    background-color: var(--suzuki-blue-light);
+}
+
+/* ------------------------------------------- */
+/* MENSAJES DE ESTADO Y ENLACE */
+/* ------------------------------------------- */
+
+.registro-error {
+    color: #EF4444; /* red-500 */
+    font-size: 0.875rem; /* text-sm */
+    margin-top: 1rem; /* mt-4 */
+    text-align: center;
+}
+
+.registro-success {
+    color: #10B981; /* green-600 */
+    font-size: 0.875rem; /* text-sm */
+    margin-top: 1rem; /* mt-4 */
+    text-align: center;
+}
+
+.registro-login-link {
+    margin-top: 1.5rem; /* mt-6 */
+    text-align: center;
+    font-size: 0.875rem; /* text-sm */
+}
+
+.registro-login-link a {
+    color: var(--suzuki-blue-dark);
+    font-weight: 500;
+    text-decoration: none;
+    transition: text-decoration 0.3s;
+}
+
+.registro-login-link a:hover {
+    text-decoration: underline;
+}

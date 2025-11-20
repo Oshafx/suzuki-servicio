@@ -1,0 +1,166 @@
+/* index.css MODIFICADO */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* MANTENER solo color-scheme */
+  color-scheme: light dark;
+  
+  /* ELIMINAR O COMENTAR: color y background-color */
+  /* color: rgba(255, 255, 255, 0.87); */
+  /* background-color: #242424; */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  /* ELIMINAR ESTO para que el fondo del componente funcione */
+  /* display: flex;
+  place-items: center; */ 
+  
+  min-width: 320px;
+  /* MANTENER min-height, pero eliminar el centrado de items */
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* ELIMINAR O COMENTAR la sección @media, ya que el componente define el fondo */
+/* @media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+} *//* src/components/Servicios.css */
+
+.servicio-container {
+  background-color: #eef2f5; /* Fondo gris claro para la mesa */
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  gap: 40px;
+  color: #000; /* Asegura texto negro base */
+}
+
+/* --- HOJA PRINCIPAL --- */
+.hoja-suzuki {
+  background: white;
+  width: 100%;
+  max-width: 850px;
+  padding: 40px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  border: 1px solid #ccc;
+  position: relative;
+  color: #000; /* TEXTO NEGRO EN TODA LA HOJA */
+}
+
+/* --- INPUTS TIPO PAPEL (LO MÁS IMPORTANTE) --- */
+.input-papel {
+  border: none;
+  border-bottom: 1px solid #999;
+  background: #f9f9f9;
+  padding: 4px 8px;
+  font-family: inherit;
+  
+  /* ESTO ES LO QUE NECESITAS: */
+  color: #000 !important; /* Fuerza letra negra */
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.input-papel::placeholder {
+  color: #999; /* Color gris suave solo para el placeholder */
+  opacity: 1;
+}
+
+.input-papel:focus {
+  outline: none;
+  background: #e6f0ff;
+  border-bottom: 2px solid #003399;
+  color: #000 !important;
+}
+
+/* --- ÁREA DE TEXTO MOTIVO --- */
+.area-motivo {
+  width: 100%;
+  border: none;
+  background: transparent;
+  resize: none;
+  height: 50px;
+  color: #000 !important; /* Fuerza negro también aquí */
+  font-size: 0.9rem;
+}
+
+/* --- ETIQUETAS (LABELS) --- */
+.campo-papel label {
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: #333 !important; /* Gris muy oscuro casi negro */
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+/* (El resto de estilos se mantiene igual, solo asegura que no haya nada blanco) */
+.header-row { display: flex; justify-content: space-between; border-bottom: 3px solid #003399; padding-bottom: 15px; margin-bottom: 20px; }
+.logo-section h1 { color: #E60000; font-style: italic; font-weight: 900; font-size: 2.5rem; margin: 0; }
+.direccion-text { color: #003399; font-weight: bold; font-size: 0.75rem; }
+.titulo-orden h2 { color: #003399; margin: 0; }
+.titulo-orden div { color: #333; } /* Fecha y hora en oscuro */
+
+/* --- ESTILOS DE TABLA INFERIOR --- */
+.tabla-servicios td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  color: #000 !important; /* Texto negro en la tabla */
+}
+.tabla-servicios th {
+  background: #003399;
+  color: white; /* Solo los encabezados de tabla en blanco */
+  padding: 12px;
+  text-align: left;
+}
