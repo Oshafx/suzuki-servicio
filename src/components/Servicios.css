@@ -1,91 +1,452 @@
-/* src/components/Servicios.css */
+/* Servicios.css */
+:root {
+  --suzuki-blue: #003399;
+  --border-color: #003399;
+  --text-color: #333;
+  --bg-paper: #ffffff;
+}
 
+body {
+  background-color: #f0f2f5;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Contenedor Principal */
 .servicio-container {
-  background: #eef2f5;
-  min-height: 100vh;
-  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #000;
-  font-family: Arial, sans-serif;
+  padding: 20px;
 }
 
+/* La hoja de papel A4 aproximada */
 .hoja-suzuki {
-  background: white;
   width: 100%;
-  max-width: 900px; /* Un poco más ancha para que quepa todo */
-  padding: 30px 50px;
-  border: 1px solid #ccc;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  margin-bottom: 40px;
+  max-width: 900px; 
+  background: var(--bg-paper);
+  padding: 30px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+  color: var(--text-color);
+  position: relative;
+  margin-bottom: 30px;
 }
 
-.modo-edicion { border: 3px solid #ffa500; }
-
-/* Header */
-.header-row { display: flex; justify-content: space-between; border-bottom: 3px solid #003399; padding-bottom: 10px; margin-bottom: 15px; }
-.logo-section h1 { color: #E60000; font-size: 2.5rem; font-weight: 900; font-style: italic; margin: 0; }
-.direccion-text { color: #003399; font-size: 0.7rem; font-weight: bold; }
-.titulo-orden h2 { color: #003399; font-size: 1.5rem; margin: 0; text-align: right; }
-.fechas-grid { display: flex; flex-direction: column; align-items: flex-end; font-size: 0.8rem; margin-top: 5px; }
-
-/* Grid Datos Generales */
-.grid-datos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 15px; }
-.col-2 { grid-column: span 2; }
-.col-3 { grid-column: span 3; }
-
-.campo-papel { display: flex; flex-direction: column; }
-.campo-papel label { font-size: 0.6rem; font-weight: bold; color: #333; margin-bottom: 2px; }
-.input-papel { 
-    border: none; border-bottom: 1px solid #666; 
-    background: #f5f5f5; color: #000 !important; 
-    font-size: 0.9rem; padding: 2px 5px; 
+.modo-edicion {
+  border: 2px solid orange;
+  box-shadow: 0 0 20px rgba(255, 165, 0, 0.3);
 }
-.input-papel:focus { border-bottom: 2px solid #003399; background: #eef; outline: none; }
 
-/* Checklists Complejos */
+/* --- Encabezado --- */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.logo-section {
+  width: 40%;
+}
+
+.logo-img {
+  height: 60px;
+  margin-bottom: 5px;
+}
+
+.direccion-text {
+  font-size: 0.75rem;
+  color: var(--suzuki-blue);
+  line-height: 1.2;
+}
+
+.titulo-orden {
+  width: 55%;
+  text-align: right;
+}
+
+.titulo-orden h2 {
+  color: var(--suzuki-blue);
+  font-size: 1.8rem;
+  margin: 0 0 10px 0;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.fechas-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.9rem;
+}
+
+.fecha-item {
+  border-bottom: 1px solid var(--suzuki-blue);
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  padding-bottom: 2px;
+}
+
+/* --- Grid de Datos del Cliente --- */
+.grid-datos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.campo-papel {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 8px;
+}
+
+.col-full { width: 100%; }
+.col-2 { width: 48%; }
+
+.campo-papel label {
+  font-weight: bold;
+  color: var(--suzuki-blue);
+  font-size: 0.85rem;
+  margin-right: 5px;
+  white-space: nowrap;
+}
+
+.input-papel {
+  flex-grow: 1;
+  border: none;
+  border-bottom: 1px solid var(--suzuki-blue);
+  background: transparent;
+  font-size: 0.9rem;
+  padding: 2px 5px;
+  color: #000;
+  outline: none;
+}
+
+.input-papel:focus {
+  background-color: #eef6ff;
+}
+
+/* --- Motivo --- */
+.seccion-motivo {
+  border: 1px solid var(--suzuki-blue);
+  padding: 10px;
+  margin-bottom: 15px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+}
+
+.header-seccion {
+  color: var(--suzuki-blue);
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.area-motivo {
+  width: 100%;
+  flex-grow: 1;
+  border: none;
+  resize: none;
+  font-family: inherit;
+  outline: none;
+}
+
+.check-simple {
+  font-size: 0.8rem;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* --- Checklist Grid Completo (3 Columnas) --- */
 .checklist-grid-completo {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr; /* 3 Columnas iguales */
-    gap: 20px;
-    border-top: 2px solid #003399;
-    padding-top: 10px;
-    font-size: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
 }
 
-.col-check h4 {
-    background: #003399; color: white;
-    padding: 3px; text-align: center; margin: 0 0 10px 0;
-    font-size: 0.8rem;
+.col-check {
+  border: 1px solid var(--suzuki-blue);
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
 }
 
+.header-tabla {
+  background-color: transparent;
+  color: var(--suzuki-blue);
+  font-weight: bold;
+  padding: 5px;
+  border-bottom: 1px solid var(--suzuki-blue);
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tabla-body {
+  padding: 5px;
+  font-size: 0.8rem;
+}
+
+/* Fila Check Individual */
 .check-row-grid {
-    display: flex; justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px dotted #ccc;
-    padding: 2px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 3px 0;
 }
-.check-label { width: 50%; font-weight: 500; }
-.check-opts { display: flex; gap: 5px; font-size: 0.65rem; }
-.check-opts label { display: flex; align-items: center; gap: 2px; cursor: pointer; }
 
-/* Footer Firmas */
-.footer-firmas {
-    display: flex; justify-content: space-between; margin-top: 40px;
+.check-row-grid:last-child { border-bottom: none; }
+
+.check-label {
+  color: var(--suzuki-blue);
+  font-weight: 600;
 }
-.firma-box { width: 40%; text-align: center; }
-.linea-firma { border-top: 1px solid #000; padding-top: 5px; font-weight: bold; font-size: 0.8rem; }
 
-/* Botones */
-.botones-flotantes { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
-.btn-guardar { background: #E60000; color: white; padding: 10px 30px; border: none; font-weight: bold; cursor: pointer; }
-.btn-cancelar { background: #555; color: white; padding: 10px 20px; border: none; cursor: pointer; }
+.check-opts {
+  display: flex;
+  gap: 5px;
+}
 
-/* Historial */
-.historial-container { width: 100%; max-width: 900px; }
-.tabla-servicios { width: 100%; border-collapse: collapse; background: white; }
-.tabla-servicios th { background: #003399; color: white; padding: 10px; }
-.tabla-servicios td { padding: 8px; border-bottom: 1px solid #eee; }
+.opt-label input { display: none; } /* Ocultar radio default */
 
-.gas-scale { display: flex; justify-content: space-between; padding: 0 5px; font-size: 0.7rem; font-weight: bold; }
+.opt-label {
+  cursor: pointer;
+  font-weight: bold;
+  color: #ccc;
+  padding: 0 2px;
+}
+
+.opt-label.selected {
+  color: #000; /* Color cuando está seleccionado */
+}
+
+/* Subsecciones y Diagramas Interactivos */
+.sub-seccion {
+  margin-top: 10px;
+  border-top: 1px solid var(--suzuki-blue);
+  padding-top: 5px;
+}
+
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* --- ESTILOS NUEVOS PARA SI/NO EN CARROCERÍA --- */
+.contenedor-danos-sino {
+  width: 100%;
+  padding: 0 10px;
+  margin-bottom: 10px;
+}
+
+.fila-dano {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 5px 0;
+}
+
+.dano-label {
+  font-weight: bold;
+  color: var(--suzuki-blue);
+  font-size: 0.85rem;
+}
+
+.dano-radios {
+  display: flex;
+  gap: 12px;
+}
+
+.dano-radios label {
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #bbb;
+}
+
+/* Resaltar la opción seleccionada */
+.dano-radios label.selected {
+  color: #000;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* --- DIAGRAMAS --- */
+.contenedor-diagrama, 
+.contenedor-tablero {
+  position: relative; 
+  width: 100%;
+  border: 1px solid #eee;
+  cursor: crosshair;
+  overflow: hidden; 
+  margin-top: 5px;
+}
+
+.contenedor-diagrama {
+  max-width: 280px;
+}
+
+.contenedor-tablero {
+  max-width: 250px; 
+}
+
+.img-diagrama, 
+.img-tablero {
+  width: 100%;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.marca-dano {
+  position: absolute;
+  color: red;
+  font-weight: bold;
+  font-size: 1.5rem;
+  line-height: 1;
+  font-family: sans-serif;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  text-shadow: 1px 1px 0px white, -1px -1px 0 white;
+  z-index: 10;
+}
+
+.marca-dano:hover {
+  transform: translate(-50%, -50%) scale(1.3);
+}
+
+/* --- Footer / Gasolina --- */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  border: 1px solid var(--suzuki-blue);
+  padding: 10px;
+}
+
+.gasolina-wrapper {
+  margin-top: 15px;
+  padding: 10px;
+  border: 1px solid var(--suzuki-blue);
+  border-radius: 5px;
+}
+
+.gasolina-slider-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gas-range {
+  flex-grow: 1;
+  accent-color: var(--suzuki-blue);
+}
+
+.firmas-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.firma-linea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.firma-linea input {
+  border: none;
+  border-bottom: 1px solid #000;
+  text-align: center;
+  width: 90%;
+  margin-bottom: 5px;
+}
+
+.espacio-firma {
+  width: 90%;
+  height: 25px;
+  border-bottom: 1px solid #000;
+  margin-bottom: 5px;
+}
+
+.firma-linea span {
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+/* --- Botones Flotantes --- */
+.botones-flotantes {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+}
+
+.btn-guardar, .btn-imprimir, .btn-cancelar {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.btn-guardar { background-color: var(--suzuki-blue); }
+.btn-guardar:hover { background-color: #002266; }
+.btn-imprimir { background-color: #444; }
+.btn-cancelar { background-color: #d9534f; }
+
+.btn-del {
+    background: #ffcccc;
+    border: 1px solid red;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+/* --- Historial --- */
+.historial-container {
+  width: 100%;
+  max-width: 900px;
+  margin-top: 20px;
+}
+
+.tabla-servicios {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.tabla-servicios th, .tabla-servicios td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.tabla-servicios th {
+  background-color: var(--suzuki-blue);
+  color: white;
+}
+
+/* --- Print Media Query --- */
+@media print {
+  body { background-color: white; }
+  .hoja-suzuki { box-shadow: none; border: none; margin: 0; padding: 0; width: 100%; max-width: 100%; }
+  .no-print { display: none !important; }
+  .servicio-container { padding: 0; }
+  .marca-dano { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .col-check { min-height: auto; }
+}

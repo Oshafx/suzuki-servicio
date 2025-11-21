@@ -1,21 +1,27 @@
+/* Fuente Suzuki */
 @font-face {
   font-family: 'SuzukiFont';
-  src: url('../assets/S.otf') format('truetype');
+  src: url('../assets/S.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
-/* Colores de Suzuki (Reutilizados del registro) */
+
+/* Colores de Suzuki & Variables */
 :root {
-    --suzuki-blue-dark: #002D72;
-    --suzuki-blue-light: #006ACB;
-    --suzuki-orange: #ff0000;
-    --background-light: #F3F4F6;
-    --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --suzuki-blue-dark: #002D72;   /* Azul corporativo */
+    --suzuki-blue-light: #006ACB;  /* Azul brillante */
+    --suzuki-red: #E60012;         /* Rojo Suzuki (S) */
+    --suzuki-orange: #FF6F00;      /* Acento secundario */
+    --background-light: #F3F4F6;   /* Gris muy claro */
+    --text-dark: #1F2937;
+    --text-gray: #6B7280;
+    
+    /* Sombra más suave y moderna */
+    --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 /* ------------------------------------------- */
-/* ESTILOS DEL CONTENEDOR PRINCIPAL (PAGE) */
-/* Se renombra de 'registro-container' a 'login-container' */
+/* CONTENEDOR PRINCIPAL */
 /* ------------------------------------------- */
 
 .login-container {
@@ -26,13 +32,13 @@
     justify-content: center;
     background-color: var(--background-light);
     padding: 1rem;
-    position: relative; /* Para las formas abstractas */
+    position: relative;
     overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* ------------------------------------------- */
-/* FORMAS ABSTRACTAS (Reutilización de animaciones y estilos) */
-/* Se usan los mismos pseudo-elementos en el contenedor */
+/* ANIMACIÓN DE FONDO (BLOBS) */
 /* ------------------------------------------- */
 
 .login-container::before,
@@ -40,29 +46,29 @@
     content: '';
     position: absolute;
     border-radius: 50%;
-    filter: blur(40px);
-    opacity: 0.5;
-    mix-blend-mode: multiply;
+    filter: blur(60px);
+    opacity: 0.6;
     z-index: 0;
-    animation: blob 7s infinite;
+    animation: blob 8s infinite ease-in-out;
 }
 
-
 .login-container::before {
-    top: 25%;
-    left: 25%;
-    width: 128px;
-    height: 128px;
-    background-color: var(--suzuki-orange);
+    top: 20%;
+    left: 20%;
+    width: 300px;
+    height: 300px;
+    background-color: var(--suzuki-blue-light);
+    mix-blend-mode: multiply;
 }
 
 .login-container::after {
-    bottom: 25%;
-    right: 25%;
-    width: 160px;
-    height: 160px;
-    background-color: var(--suzuki-blue-light);
-    animation-delay: 2s;
+    bottom: 20%;
+    right: 20%;
+    width: 250px;
+    height: 250px;
+    background-color: var(--suzuki-red);
+    animation-delay: 4s;
+    mix-blend-mode: multiply;
 }
 
 @keyframes blob {
@@ -72,135 +78,176 @@
     100% { transform: translate(0px, 0px) scale(1); }
 }
 
-
 /* ------------------------------------------- */
-/* ESTILOS DE LA TARJETA DEL FORMULARIO */
-/* Se renombra de 'registro-card' a 'login-card' */
+/* TARJETA DEL FORMULARIO */
 /* ------------------------------------------- */
 
-/* En loginusuario.css y registrousario.css */
-.login-card, .registro-card {
-    /* ... */
-    max-width: 200px; 
-   
-    align-items: center;
-    flex: center;
-    /* ... */
+.login-card {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: var(--card-shadow);
+    width: 100%;
+    max-width: 420px; /* Ancho corregido para que no se vea aplastado */
+    z-index: 10;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: transform 0.3s ease;
 }
 
-/* Se renombra de 'registro-header' a 'login-header' */
+.login-card:hover {
+    transform: translateY(-2px);
+}
+
+/* LOGO */
+.login-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.login-logo span {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--suzuki-red);
+    font-family: 'SuzukiFont', sans-serif;
+    letter-spacing: -1px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
 .login-header {
     text-align: center;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #1F2937;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--suzuki-blue-dark);
     margin-bottom: 2rem;
 }
 
-/* Se renombra de 'registro-logo' a 'login-logo' */
-.login-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: var(--suzuki-blue-dark);
-  font-family: 'SuzukiFont', s ; /* 👈 Aquí aplicas tu fuente */
-}
-
 /* ------------------------------------------- */
-/* ESTILOS DEL FORMULARIO E INPUTS */
-/* Se renombra de 'registro-form' a 'login-form' */
-/* Se renombra de 'registro-input' a 'login-input' */
-/* Se reutiliza 'input-group' y 'input-icon' */
+/* FORMULARIO E INPUTS */
 /* ------------------------------------------- */
 
 .login-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 2rem;
+    gap: 1.25rem;
 }
 
 .input-group {
-    position: center;
+    position: relative;
 }
 
 .input-icon {
     position: absolute;
-    left: 0.75rem;
+    left: 1rem;
     top: 50%;
     transform: translateY(-50%);
-    color: #9CA3AF;
+    color: var(--text-gray);
     width: 20px;
     height: 20px;
+    transition: color 0.3s;
 }
 
 .login-input {
-    padding: 0.75rem 0.75rem 0.75rem 2.5rem;
-    border-radius: 0.375rem;
-    border: 1px solid #D1D5DB;
     width: 100%;
-    font-size: 1rem;
-    color: #1F2937;
-    align-items: center;
-    position: center;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    padding: 0.85rem 1rem 0.85rem 3rem; /* Espacio a la izquierda para el icono */
+    border-radius: 0.5rem;
+    border: 2px solid transparent;
+    background-color: #F3F4F6;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    outline: none;
+    box-sizing: border-box;
 }
 
 .login-input:focus {
-    outline: none;
+    background-color: #FFFFFF;
     border-color: var(--suzuki-blue-light);
-    box-shadow: 0 0 0 2px var(--suzuki-blue-light);
+    box-shadow: 0 0 0 4px rgba(0, 106, 203, 0.1);
+}
+
+.input-group:focus-within .input-icon {
+    color: var(--suzuki-blue-light);
 }
 
 /* ------------------------------------------- */
-/* ESTILOS DEL BOTÓN */
-/* Se renombra de 'registro-button' a 'login-button' */
+/* BOTÓN */
 /* ------------------------------------------- */
 
 .login-button {
-    background-color: var(--suzuki-blue-dark);
+    margin-top: 0.5rem;
+    background: linear-gradient(135deg, var(--suzuki-blue-dark) 0%, var(--suzuki-blue-light) 100%);
     color: white;
-    padding: 0.75rem;
-    border-radius: 0.375rem;
+    padding: 0.9rem;
+    border-radius: 0.5rem;
     font-weight: bold;
+    font-size: 1rem;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 45, 114, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .login-button:hover {
-    background-color: var(--suzuki-blue-light);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 45, 114, 0.3);
+    filter: brightness(1.1);
+}
+
+.login-button:active {
+    transform: translateY(0);
 }
 
 /* ------------------------------------------- */
-/* MENSAJE DE ERROR Y ENLACE DE REGISTRO */
-/* Se renombra de 'registro-error' a 'login-error' */
-/* Se renombra de 'registro-login-link' a 'login-register-link' */
+/* MENSAJES Y LINKS */
 /* ------------------------------------------- */
 
 .login-error {
-    color: #EF4444;
-    font-size: 0.875rem;
-    margin-top: 1rem;
+    background-color: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.85rem;
     text-align: center;
+    margin-top: 1rem;
+    animation: fadeIn 0.3s ease-in;
 }
 
 .login-register-link {
-    margin-top: rem;
+    margin-top: 1.5rem;
     text-align: center;
-    font-size: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-gray);
 }
 
+/* Estilo para el botón/enlace dentro del div de link */
+.login-register-link button, 
 .login-register-link a {
-    color: var(--suzuki-blue-dark);
-    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--suzuki-blue-light);
+    font-weight: 600;
+    font-size: inherit;
     text-decoration: none;
-    transition: text-decoration 0.3s;
+    transition: color 0.2s;
+    font-family: inherit;
+    padding: 0;
 }
 
+.login-register-link button:hover, 
 .login-register-link a:hover {
+    color: var(--suzuki-blue-dark);
     text-decoration: underline;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
 }

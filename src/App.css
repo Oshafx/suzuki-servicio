@@ -1,0 +1,339 @@
+/* ========================================= */
+/* SUZUKI SERVICE APP - ESTILOS COMPLETOS    */
+/* ========================================= */
+
+/* 1. RESET Y FUENTES */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+    --suzuki-blue: #002D72;
+    --suzuki-red: #E60012;
+    --suzuki-red-dark: #B91C1C;
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --text-dark: #1F2937;
+    --text-light: #F3F4F6;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f3f4f6;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+/* 2. FONDO ANIMADO (Burbujas de color) */
+.app-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background: #f3f4f6;
+    overflow: hidden;
+}
+
+.app-background::before,
+.app-background::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    animation: float 10s infinite ease-in-out;
+}
+
+.app-background::before {
+    top: -10%;
+    left: -10%;
+    width: 600px;
+    height: 600px;
+    background-color: rgba(0, 106, 203, 0.4); /* Azul */
+}
+
+.app-background::after {
+    bottom: -10%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background-color: rgba(230, 0, 18, 0.4); /* Rojo */
+    animation-delay: 5s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, 50px); }
+}
+
+/* 3. HEADER (Barra Superior) */
+.app-header {
+    /* Degradado Rojo Suzuki */
+    background: linear-gradient(135deg, #991b1b 0%, #dc2626 100%);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Sección Izquierda: Logo */
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo {
+    width: 45px;
+    height: 45px;
+    background: white;
+    color: var(--suzuki-red);
+    font-weight: 900;
+    font-size: 28px;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transform: skewX(-10deg); /* Efecto inclinado deportivo */
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.brand-text h1 {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.brand-text span {
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+/* Sección Derecha: Usuario y Reloj */
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.time-display {
+    text-align: right;
+    padding-right: 20px;
+    border-right: 1px solid rgba(255,255,255,0.2);
+    display: none; /* Oculto en celulares muy chicos */
+}
+
+@media (min-width: 600px) {
+    .time-display { display: block; }
+}
+
+.date-text {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.time-text {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: monospace;
+}
+
+/* Tarjeta de Usuario */
+.user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 5px 15px 5px 5px;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(to bottom right, #ffffff, #e5e5e5);
+    color: var(--suzuki-red-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    border: 2px solid #ff6b6b;
+}
+
+.user-info {
+    text-align: right;
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .user-info { display: block; }
+}
+
+.username {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.role-badge {
+    font-size: 10px;
+    text-transform: uppercase;
+    background-color: #22c55e; /* Verde */
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.role-badge.admin { background-color: #eab308; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+
+/* Botón Logout */
+.logout-btn {
+    background: rgba(60, 0, 0, 0.4);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.logout-btn:hover {
+    background: rgba(0,0,0,0.4);
+    transform: scale(1.05);
+}
+
+/* Botón Admin (Registrar) */
+.admin-bar {
+    margin-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 8px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-register {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.2s;
+}
+
+.btn-register:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* 4. CONTENEDOR PRINCIPAL */
+.main-container {
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 5px;
+    border-radius: 15px;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #f3f4f6;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    color: #555;
+}
+
+.close-modal-btn:hover {
+    background: #fee2e2;
+    color: red;
+}
+.contenedor-diagrama, .contenedor-tablero {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+.img-diagrama, .img-tablero {
+    width: 100%;
+    display: block;
+}
+.marca-dano {
+    position: absolute;
+    color: red;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transform: translate(-50%, -50%);
+    text-shadow: 1px 1px 0 white;
+    pointer-events: none; /* En modo lectura no deben estorbar */
+}

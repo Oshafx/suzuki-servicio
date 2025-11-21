@@ -1,0 +1,138 @@
+/* ========================================= */
+/* ESTILOS DE REFACCIONES                    */
+/* ========================================= */
+
+.refacciones-container {
+    padding: 2rem;
+    background-color: #f3f4f6;
+    min-height: calc(100vh - 80px);
+}
+
+.refacciones-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    border-bottom: 3px solid #1e3a8a; /* Azul oscuro */
+    padding-bottom: 1rem;
+}
+
+.refacciones-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1e3a8a;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* Contenedor de la Tabla */
+.table-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    overflow: hidden; /* Para redondear bordes de la tabla */
+    border: 1px solid #e5e7eb;
+}
+
+.ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.ref-table thead {
+    background: #1e3a8a; /* Azul Suzuki */
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+.ref-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 700;
+}
+
+.ref-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+}
+
+/* Filas alternadas y hover */
+.ref-table tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.ref-table tbody tr:hover {
+    background-color: #eff6ff;
+}
+
+/* Celdas Específicas */
+.td-orden {
+    font-weight: 900;
+    color: #dc2626; /* Rojo */
+    font-size: 1rem;
+}
+
+.td-vehiculo-main {
+    font-weight: 700;
+    color: #1f2937;
+    display: block;
+}
+
+.td-vehiculo-sub {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.badge-vin {
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: #374151;
+}
+
+/* Badges de Estado en Tabla */
+.badge-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.badge-status.abierto {
+    background-color: #d1fae5;
+    color: #047857;
+}
+
+.badge-status.en_proceso {
+    background-color: #fef3c7;
+    color: #b45309;
+}
+
+.badge-status.terminado {
+    background-color: #e0e7ff;
+    color: #3730a3;
+}
+
+.td-notas {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #4b5563;
+    font-style: italic;
+}
+
+.empty-ref {
+    text-align: center;
+    padding: 3rem;
+    color: #9ca3af;
+}

@@ -10,72 +10,129 @@ import Recepcion from './components/Recepcion.jsx';
 import ListaVehiculos from './components/ListaVehiculos.jsx';
 import Login from './components/Login.jsx';
 import Mecanicos from './components/Mecanicos.jsx';
+import Refacciones from './components/Refacciones.jsx'; // ✅ Importado correctamente
 
+// Importamos los estilos globales (Asegúrate de que tu CSS esté aquí o en index.css)
+import './App.css'; 
 
-import './index.css';
-
-const AppContent = ({ user, userRole, handleLogout }) => {
+const AppContent = ({ user, userRole, userName, handleLogout }) => {
     const [showRegisterModal, setShowRegisterModal] = useState(false);
+    const [currentTime, setCurrentTime] = useState(new Date());
 
-    // Mostrar interfaz según rol
+    // Reloj en tiempo real
+    useEffect(() => {
+        const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    // Formateadores de texto
+    const formatDate = (date) => {
+        return date.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' });
+    };
+    
+    const formatTime = (date) => {
+        return date.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+    };
+
+    const formatRole = (role) => {
+        if (!role) return "";
+        return role.charAt(0).toUpperCase() + role.slice(1);
+    };
+
+    // --- LÓGICA DE ROLES (Fusionada: Refacciones + Diseño) ---
     const renderRoleComponent = () => {
-        if (userRole === "mecanico") {
-            return <Mecanicos />;
-        } else if(userRole === "servicios") { 
-             return <Servicios />;
-        }else if (userRole === "lavador") {
-            return <div>LAVADOR - Aquí va tu interfaz de lavador</div>;
-        } else if (userRole === "administrador") {
-            return (
-                <main className="container mx-auto mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8 px-4">
-                    <Recepcion />
-                    <ListaVehiculos />
-                </main>
-            );
-        } else {
-            return <div>No se reconoció el rol del usuario.</div>;
+        switch (userRole) {
+            case "mecanico":
+                return <Mecanicos />;
+            case "servicios":
+                return <Servicios />;
+            case "refacciones":
+                return <Refacciones />; // ✅ Nuevo panel
+            case "lavador":
+                return <div style={{textAlign:'center', padding:'50px', color:'#666'}}>Interfaz de Lavado en construcción...</div>;
+            case "administrador":
+            case "recepcion":
+                return (
+                    <div style={{display:'grid', gridTemplateColumns: '1fr 1fr', gap:'20px'}}>
+                        <Recepcion />
+                        <ListaVehiculos />
+                    </div>
+                );
+            default:
+                return <div style={{textAlign:'center', padding:'20px', color:'red'}}>Rol no reconocido: {userRole}</div>;
         }
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 pb-10">
-            {/* Header / Barra de Navegación */}
-            <header className="p-4 bg-red-700 text-white shadow-lg">
-                <div className="container mx-auto flex justify-between items-center">
-                    <h1 className="text-3xl font-extrabold tracking-wider">SUZUKI SERVICIO</h1>
-                    <div className="flex items-center space-x-4">
-                        <p className="text-sm font-light hidden sm:block">
-                            Usuario: <span className="font-semibold">{user.email}</span>
-                        </p>
-                        <button
-                            onClick={() => setShowRegisterModal(true)}
-                            className="bg-red-500 hover:bg-red-600 text-white py-2 px-3 rounded-lg text-sm transition duration-150 font-semibold"
-                        >
-                            Registrar Nuevo Usuario
-                        </button>
-                        <button
-                            onClick={handleLogout}
-                            className="bg-gray-100 text-red-700 py-2 px-3 rounded-lg text-sm font-semibold hover:bg-white transition duration-150"
-                        >
-                            Cerrar Sesión
+        <div className="app-layout">
+            
+            {/* FONDO ANIMADO */}
+            <div className="app-background"></div>
+
+            {/* HEADER PRINCIPAL (Diseño Profesional) */}
+            <header className="app-header">
+                <div className="header-container">
+                    
+                    {/* 1. LOGO Y TÍTULO */}
+                    <div className="brand-section">
+                        <div className="brand-logo">S</div>
+                        <div className="brand-text">
+                            <h1>SUZUKI</h1>
+                            <span>Aplicación de Servicio</span>
+                        </div>
+                    </div>
+
+                    {/* 2. INFO USUARIO Y RELOJ */}
+                    <div className="user-section">
+                        
+                        {/* Reloj */}
+                        <div className="time-display">
+                            <span className="date-text">{formatDate(currentTime)}</span>
+                            <span className="time-text">{formatTime(currentTime)}</span>
+                        </div>
+
+                        {/* Tarjeta de Usuario */}
+                        <div className="user-card">
+                            <div className="avatar">
+                                {userName ? userName.charAt(0).toUpperCase() : "U"}
+                            </div>
+                            <div className="user-info">
+                                <span className="username">{userName || "Usuario"}</span>
+                                <span className={`role-badge ${userRole === 'administrador' ? 'admin' : ''}`}>
+                                    {formatRole(userRole)}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Botón Salir */}
+                        <button className="logout-btn" onClick={handleLogout} title="Cerrar Sesión">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
                         </button>
                     </div>
                 </div>
+
+                {/* BARRA EXTRA SOLO PARA ADMINS/RECEPCIÓN */}
+                {(userRole === 'administrador' || userRole === 'recepcion') && (
+                    <div className="header-container admin-bar">
+                         <button onClick={() => setShowRegisterModal(true)} className="btn-register">
+                            <span>+</span> Registrar Nuevo Personal
+                        </button>
+                    </div>
+                )}
             </header>
 
-            {/* Contenido principal según rol */}
-            {renderRoleComponent()}
+            {/* CONTENIDO PRINCIPAL */}
+            <main className="main-container">
+                {renderRoleComponent()}
+            </main>
 
-            {/* Modal de Registro de Usuario */}
+            {/* MODAL REGISTRO */}
             {showRegisterModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-                        <button
-                            onClick={() => setShowRegisterModal(false)}
-                            className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-                        >
-                            ✕
-                        </button>
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <button className="close-modal-btn" onClick={() => setShowRegisterModal(false)}>✕</button>
                         <RegistroUsuario onClose={() => setShowRegisterModal(false)} />
                     </div>
                 </div>
@@ -86,29 +143,30 @@ const AppContent = ({ user, userRole, handleLogout }) => {
 
 export default function App() {
     const [user, setUser] = useState(null);
-    const [userRole, setUserRole] = useState(null); // <-- Estado para guardar el rol
+    const [userRole, setUserRole] = useState(null);
+    const [userName, setUserName] = useState("");
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             if (currentUser) {
                 setUser(currentUser);
-
-                // Obtener rol desde Firestore
                 const docRef = doc(db, "usuarios", currentUser.uid);
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    setUserRole(docSnap.data().rol);
+                    const data = docSnap.data();
+                    setUserRole(data.rol);
+                    setUserName(data.username || currentUser.email.split('@')[0]);
                 } else {
-                    console.warn("No se encontró el documento del usuario en Firestore");
                     setUserRole(null);
+                    setUserName("Invitado");
                 }
             } else {
                 setUser(null);
                 setUserRole(null);
+                setUserName("");
             }
-
             setLoading(false);
         });
 
@@ -126,8 +184,9 @@ export default function App() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-gray-100">
-                <p className="text-xl text-red-700 font-semibold">Cargando aplicación...</p>
+            <div style={{height:'100vh', display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', background:'#f3f4f6'}}>
+                <div style={{fontSize:'40px', color:'#E60012', fontWeight:'bold'}}>S</div>
+                <p style={{color:'#666', marginTop:'10px', fontSize:'12px', letterSpacing:'2px'}}>CARGANDO SISTEMA...</p>
             </div>
         );
     }
@@ -136,5 +195,5 @@ export default function App() {
         return <Login />;
     }
 
-    return <AppContent user={user} userRole={userRole} handleLogout={handleLogout} />;
+    return <AppContent user={user} userRole={userRole} userName={userName} handleLogout={handleLogout} />;
 }

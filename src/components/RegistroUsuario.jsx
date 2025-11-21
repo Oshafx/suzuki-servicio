@@ -8,7 +8,8 @@ import "./RegistroUsuario.css";
 const RegistroUsuario = ({ onClose }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [rol, setRol] = useState("recepcion");
+  // Cambio el valor por defecto a uno de los válidos (servicios)
+  const [rol, setRol] = useState("servicios"); 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -17,7 +18,6 @@ const RegistroUsuario = ({ onClose }) => {
     setError("");
     setSuccess("");
 
-    // CORRECCIÓN: Uso de backticks (`) para insertar la variable
     const fakeEmail = `${username}@Suzuki.com`; 
 
     try {
@@ -32,13 +32,12 @@ const RegistroUsuario = ({ onClose }) => {
         createdAt: new Date(),
       });
 
-      // CORRECCIÓN: Uso de backticks para el mensaje
       setSuccess(`Usuario registrado correctamente como ${rol}.`);
       
       // Limpiar formulario
       setUsername("");
       setPassword("");
-      setRol("recepcion");
+      setRol("servicios"); // Resetear al valor por defecto
 
     } catch (err) {
       if (err.code === "auth/email-already-in-use") {
@@ -117,7 +116,7 @@ const RegistroUsuario = ({ onClose }) => {
             />
           </div>
 
-          {/* Selector de Rol */}
+          {/* Selector de Rol (SOLO: Servicios, Mecánico, Refacciones) */}
           <div className="input-group">
             <select
               value={rol}
@@ -125,12 +124,9 @@ const RegistroUsuario = ({ onClose }) => {
               className="registro-input"
               required
             >
-              <option value="recepcion">Recepción</option>
-              <option value="mecanico">Mecánico</option>
-              <option value="lavador">Lavador</option>
-              <option value="refacciones">Refacciones</option>
-              {/* CORRECCIÓN: Cambiado value de 'refacciones' a 'servicios' para evitar duplicados */}
               <option value="servicios">Servicios</option>
+              <option value="mecanico">Mecánico</option>
+              <option value="refacciones">Refacciones</option>
             </select>
           </div>
 
@@ -146,7 +142,6 @@ const RegistroUsuario = ({ onClose }) => {
 
         {/* Link para volver al Login */}
         <div className="registro-login-link">
-          {/* Usamos un button type="button" y onClick={onClose} para volver sin recargar la página */}
           <button 
             type="button" 
             onClick={onClose} 

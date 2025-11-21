@@ -1,156 +1,239 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { collection, query, onSnapshot, doc, updateDoc, orderBy } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/firestore";
-import RegistroUsuario from "./RegistroUsuario";
+import './Servicios.css'; // Estilos de la hoja
+import './Mecanicos.css'; // Estilos del tablero
 
-const ServiciosMecanico = ({ nombreMecanico="josué" }) => {
-  const [servicios, setServicios] = useState([]);
-  const [refaccionesInput, setRefaccionesInput] = useState({});
-
-  // Función para obtener fecha y hora actual en Ciudad Victoria
-  const getFechaHoraActual = () => {
-    const now = new Date();
-    const opciones = { 
-      timeZone: "America/Monterrey", 
-      hour12: false, 
-      hour: "2-digit", 
-      minute: "2-digit", 
-      second: "2-digit", 
-      year: "numeric", 
-      month: "2-digit", 
-      day: "2-digit"
-    };
-    const fechaHoraString = now.toLocaleString("es-MX", opciones); // "dd/mm/yyyy, hh:mm:ss"
-    const [fecha, hora] = fechaHoraString.split(", ");
-    return { fecha, hora };
-  };
+const Mecanicos = () => {
+  const [ordenes, setOrdenes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Estados para el Modal
+  const [selectedOrden, setSelectedOrden] = useState(null);
+  const [nombreMecanico, setNombreMecanico] = useState("");
 
   useEffect(() => {
-    const serviciosRef = collection(db, "servicios");
-
-    // Traer servicios pendientes
-    const qPendiente = query(serviciosRef, where("estado", "==", "pendiente"));
-    const unsubscribePendiente = onSnapshot(qPendiente, snapshot => {
-      const listaPendiente = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setServicios(prev => {
-        const enProgreso = prev.filter(s => s.estado === "en progreso mecanico");
-        return [...enProgreso, ...listaPendiente];
-      });
+    const q = query(collection(db, "servicios"), orderBy("creado", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const docs = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setOrdenes(docs);
+      setLoading(false);
     });
-
-    // Traer servicios en progreso
-    const qEnProgreso = query(serviciosRef, where("estado", "==", "en progreso mecanico"));
-    const unsubscribeEnProgreso = onSnapshot(qEnProgreso, snapshot => {
-      const listaEnProgreso = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setServicios(prev => {
-        const pendientes = prev.filter(s => s.estado === "pendiente");
-        return [...pendientes, ...listaEnProgreso];
-      });
-    });
-
-    return () => {
-      unsubscribePendiente();
-      unsubscribeEnProgreso();
-    };
+    return () => unsubscribe();
   }, []);
 
-  // Tomar servicio
-  const tomarServicio = async (id) => {
-    if (!nombreMecanico) {
-      alert("Error: no se detectó el nombre del mecánico");
-      return;
-    }
+  // Abrir Modal
+  const abrirHoja = (orden) => {
+    setSelectedOrden(orden);
+    setNombreMecanico(orden.mecanico || ""); 
+  };
 
+  // Cerrar Modal
+  const cerrarHoja = () => {
+    setSelectedOrden(null);
+    setNombreMecanico("");
+  };
+
+  const guardarAsignacion = async () => {
+    if (!selectedOrden) return;
     try {
-      const { fecha, hora } = getFechaHoraActual();
-      const servicioRef = doc(db, "servicios", id);
-
-      await updateDoc(servicioRef, { 
-        estado: "en progreso mecanico", 
+      await updateDoc(doc(db, "servicios", selectedOrden.id), {
         mecanico: nombreMecanico,
-        fechaInicioMecanico: fecha,
-        horaInicioMecanico: hora
+        estado: selectedOrden.estado === 'abierto' ? 'en_proceso' : selectedOrden.estado
       });
-
-      console.log("Servicio tomado correctamente");
+      alert("Mecánico asignado correctamente.");
+      cerrarHoja();
     } catch (error) {
-      console.error("Error al tomar servicio:", error);
-      alert("No se pudo tomar el servicio. Revisa la consola.");
+      console.error("Error al guardar:", error);
+      alert("Error al guardar.");
     }
   };
 
-  // Terminar servicio
-  const terminarServicio = async (id) => {
-    if (!nombreMecanico) {
-      alert("Error: no se detectó el nombre del mecánico");
-      return;
-    }
-
+  const cambiarEstado = async (id, nuevoEstado) => {
     try {
-      const { fecha, hora } = getFechaHoraActual();
-      const servicioRef = doc(db, "servicios", id);
-      const refacciones = refaccionesInput[id] ? refaccionesInput[id].split(",") : [];
-
-      await updateDoc(servicioRef, { 
-        estado: "terminado mecanico", 
-        refacciones,
-        fechaFinMecanico: fecha,
-        horaFinMecanico: hora
-      });
-
-      console.log("Servicio terminado correctamente");
-    } catch (error) {
-      console.error("Error al terminar servicio:", error);
-      alert("No se pudo terminar el servicio. Revisa la consola.");
-    }
+      await updateDoc(doc(db, "servicios", id), { estado: nuevoEstado });
+    } catch (error) { console.error(error); }
   };
 
-  // Cambios en input de refacciones
-  const handleRefaccionesChange = (id, value) => {
-    setRefaccionesInput(prev => ({ ...prev, [id]: value }));
-  };
+  if (loading) return <div className="mecanicos-container" style={{textAlign:'center'}}>Cargando órdenes...</div>;
 
   return (
-    <div className="max-w-4xl mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">Servicios para Mecánico: {nombreMecanico || "Sin nombre"}</h2>
-      {servicios.map(s => (
-        <div key={s.id} className="border p-4 mb-4 rounded">
-          <p><strong>Cliente:</strong> {s.cliente}</p>
-          <p><strong>Auto:</strong> {s.auto}</p>
-          <p><strong>Servicio:</strong> {s.servicio}</p>
-          <p><strong>Estado:</strong> {s.estado}</p>
-          <p><strong>Mecánico asignado:</strong> {s.mecanico || "No asignado"}</p>
-          {s.fechaInicioMecanico && <p><strong>Inicio mecánico:</strong> {s.fechaInicioMecanico} {s.horaInicioMecanico}</p>}
-          {s.fechaFinMecanico && <p><strong>Fin mecánico:</strong> {s.fechaFinMecanico} {s.horaFinMecanico}</p>}
+    <div className="mecanicos-container">
+      <h2 className="mecanicos-title">
+        Tablero de Taller Mecánico
+      </h2>
 
-          {s.estado === "pendiente" && (
-            <button 
-              onClick={() => tomarServicio(s.id)} 
-              className="bg-blue-600 text-white px-2 py-1 rounded mt-2">
-              Tomar Servicio
-            </button>
-          )}
-
-          {s.estado === "en progreso mecanico" && s.mecanico === nombreMecanico && (
-            <div className="mt-2">
-              <input
-                type="text"
-                placeholder="Refacciones necesarias, separadas por coma"
-                value={refaccionesInput[s.id] || ""}
-                onChange={e => handleRefaccionesChange(s.id, e.target.value)}
-                className="border p-2 w-full rounded mb-2"
-              />
-              <button 
-                onClick={() => terminarServicio(s.id)} 
-                className="bg-green-600 text-white px-2 py-1 rounded">
-                Terminar Servicio
-              </button>
+      <div className="ordenes-grid">
+        {ordenes.map((orden) => (
+          <div key={orden.id} className="orden-card">
+            
+            {/* Encabezado Tarjeta - AHORA CON NÚMERO DE ORDEN */}
+            <div className="card-header">
+              <div className="header-info">
+                <span className="orden-number-badge">#{orden.noOrden || '---'}</span>
+                <div>
+                    <h3>{orden.vehiculo}</h3>
+                    <p>{orden.placas}</p>
+                </div>
+              </div>
+              <span className={`status-badge ${orden.estado === 'terminado' ? 'terminado' : ''}`}>
+                {orden.estado || 'Abierto'}
+              </span>
             </div>
-          )}
+
+            {/* Cuerpo Tarjeta */}
+            <div className="card-body">
+              <div>
+                <p className="section-label">Falla / Motivo:</p>
+                <div className="motivo-text">
+                    {orden.motivo || "Sin descripción detallada."}
+                </div>
+                
+                {orden.mecanico && (
+                    <div className="mecanico-badge">
+                        <strong>Mecánico:</strong> {orden.mecanico}
+                    </div>
+                )}
+              </div>
+
+              {/* Botones */}
+              <div className="card-actions">
+                 <button 
+                    onClick={() => abrirHoja(orden)}
+                    className="btn-action btn-view"
+                 >
+                    📄 Ver Hoja / Asignarme
+                 </button>
+
+                 {orden.estado !== 'terminado' ? (
+                    <button 
+                        onClick={() => cambiarEstado(orden.id, 'terminado')}
+                        className="btn-action btn-finish"
+                    >
+                        ✅ Finalizar Trabajo
+                    </button>
+                 ) : (
+                    <div className="status-finished">
+                        ✓ Trabajo Terminado
+                    </div>
+                 )}
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {ordenes.length === 0 && (
+            <div className="empty-state">
+                <span className="empty-icon">🔧</span>
+                <p>No hay órdenes de servicio activas.</p>
+            </div>
+        )}
+      </div>
+
+      {/* ==================== MODAL HOJA DE SERVICIO ==================== */}
+      {selectedOrden && (
+        <div className="modal-overlay-mecanico">
+          <div className="modal-content-mecanico">
+            
+            <button onClick={cerrarHoja} className="close-modal-btn">✕</button>
+
+            {/* --- REUTILIZAMOS LA HOJA --- */}
+            <div className="hoja-suzuki" style={{boxShadow:'none', border:'none', margin:0, width:'100%', maxWidth:'100%'}}>
+                
+                {/* ENCABEZADO */}
+                <div className="header-row">
+                    <div className="logo-section">
+                        <img src="/logo-suzuki.png" alt="Suzuki" className="logo-img" style={{height:'50px'}}/>
+                        <div className="direccion-text">HOJA DE TALLER - COPIA MECÁNICO</div>
+                    </div>
+                    <div className="titulo-orden">
+                        <h2 style={{fontSize:'1.5rem', color:'#B91C1C'}}>ORDEN #{selectedOrden.noOrden || '---'}</h2>
+                        <div style={{fontSize:'0.9rem'}}>{selectedOrden.fecha}</div>
+                    </div>
+                </div>
+
+                {/* DATOS */}
+                <div className="grid-datos" style={{borderBottom:'2px solid #ddd', paddingBottom:'1rem'}}>
+                    <div className="campo-papel col-2"><label>Vehículo:</label> <span>{selectedOrden.vehiculo}</span></div>
+                    <div className="campo-papel col-2"><label>Placas:</label> <span>{selectedOrden.placas}</span></div>
+                    <div className="campo-papel col-2"><label>Color:</label> <span>{selectedOrden.color}</span></div>
+                    <div className="campo-papel col-2"><label>KM:</label> <span>{selectedOrden.kilometraje}</span></div>
+                    <div className="campo-papel col-full" style={{background:'#fffbeb', padding:'0.5rem', border:'1px solid #fde68a', marginTop:'0.5rem'}}>
+                        <label style={{color:'#b91c1c'}}>REPORTE CLIENTE:</label>
+                        <span>{selectedOrden.motivo}</span>
+                    </div>
+                </div>
+
+                {/* DIAGRAMAS */}
+                <div className="checklist-grid-completo">
+                    <div className="col-check">
+                        <div className="header-tabla">Tablero</div>
+                        <div className="tabla-body center-content relative" style={{minHeight:'150px'}}>
+                            <div className="contenedor-tablero" style={{pointerEvents:'none'}}>
+                                <img src="/tablero-iconos.png" className="img-tablero" alt="Tablero"/>
+                                {selectedOrden.indicadoresCoords?.map((c, i) => (
+                                    <div key={i} className="marca-dano" style={{left: c.x+'%', top: c.y+'%'}}>X</div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-check">
+                        <div className="header-tabla">Carrocería</div>
+                        <div className="tabla-body center-content relative" style={{minHeight:'200px'}}>
+                            <div className="danos-options" style={{fontSize:'0.7rem', marginBottom:'5px'}}>
+                                <span>Golpes: <b>{selectedOrden.golpes}</b></span> • 
+                                <span>Roto: <b>{selectedOrden.roto}</b></span> • 
+                                <span>Rayones: <b>{selectedOrden.rayones}</b></span>
+                            </div>
+                            <div className="contenedor-diagrama" style={{pointerEvents:'none'}}>
+                                <img src="/diagrama-auto.png" className="img-diagrama" alt="Auto"/>
+                                {selectedOrden.danosCoords?.map((c, i) => (
+                                    <div key={i} className="marca-dano" style={{left: c.x+'%', top: c.y+'%'}}>X</div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-check">
+                        <div className="header-tabla">Niveles</div>
+                        <div className="tabla-body" style={{padding:'10px', fontSize:'0.85rem'}}>
+                            <div style={{display:'flex', justifyContent:'space-between', borderBottom:'1px solid #eee'}}><span>Aceite:</span> <b>{selectedOrden.aceiteMotor}</b></div>
+                            <div style={{display:'flex', justifyContent:'space-between', borderBottom:'1px solid #eee'}}><span>Frenos:</span> <b>{selectedOrden.liquidoFrenos}</b></div>
+                            <div style={{display:'flex', justifyContent:'space-between', borderBottom:'1px solid #eee'}}><span>Refrigerante:</span> <b>{selectedOrden.anticongelante}</b></div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* ZONA DE ASIGNACIÓN (EDITABLE) */}
+                <div className="asignacion-box">
+                    <h3 className="asignacion-title">👨‍🔧 Asignación de Mecánico</h3>
+                    <div className="asignacion-form">
+                        <div style={{flexGrow:1}}>
+                            <label style={{display:'block', fontSize:'0.8rem', fontWeight:'bold', color:'#4b5563', marginBottom:'4px'}}>Responsable:</label>
+                            <input 
+                                type="text" 
+                                value={nombreMecanico}
+                                onChange={(e) => setNombreMecanico(e.target.value)}
+                                placeholder="Escribe tu nombre..."
+                                className="asignacion-input"
+                            />
+                        </div>
+                        <button onClick={guardarAsignacion} className="btn-save">
+                            GUARDAR
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+          </div>
         </div>
-      ))}
+      )}
     </div>
   );
 };
 
-export default ServiciosMecanico;
+export default Mecanicos;
